@@ -73,7 +73,7 @@ static bool matchNextChar(Parser* parser, char expectedChar) {
 static void skipBlanks(Parser* parser) {
     while(isspace(parser->curChar)) {
         if(parser->curChar == '\n') {
-            parser->curToken.lineNo+;
+            parser->curToken.lineNo++;
         }
 
         getNextChar(parser);
@@ -187,7 +187,7 @@ static void parseString(Parser* parser) {
                     ByteBufferAdd(parser->vm, &str, '\t');
                     break;
                 case 'u':
-                    parserUnicodeCodePoint(parser->vm, &str);
+                    parseUnicodeCodePoint(parser->vm, &str);
                     break;
                 case '"':
                     ByteBufferAdd(parser->vm, &str, '"');
@@ -387,7 +387,7 @@ void getNextToken(Parser* parser) {
                 
                 // 首字符是字母或'_'则是变量名
                 if(isalpha(parser->curChar) || parser->curChar == '_') {
-                    parseID(parser, TOKEN_UNKNOWN); // 解析变量名其余的部分
+                    parseId(parser, TOKEN_UNKNOWN); // 解析变量名其余的部分
                 } else {
                     if(parser->curChar == '#' && matchNextChar(parser, '!')) {
                         skipAline(parser);
@@ -411,7 +411,7 @@ void consumeCurToken(Parser* parser, TokenType expected, const char* errMsg) {
     if(parser->curToken.type != expected) {
         COMPILE_ERROR(parser, errMsg);
     }
-    getNextToken(parser)；
+    getNextToken(parser);
 }
 
 // 断言下一个token为expected,否则报错errMsg

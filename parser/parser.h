@@ -95,6 +95,7 @@ struct parser {
     const char* nextCharPtr;
     char curChar;
     Token curToken;
+    Token preToken;
 
     // 处于内嵌表达式之中时，期望的右括号数量。
     // 用于跟踪小括号对的嵌套
